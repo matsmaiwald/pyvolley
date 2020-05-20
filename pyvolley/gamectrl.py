@@ -25,8 +25,8 @@ class GameCtrl(Layer):
         self.hit_count = 0
         self.current_player = self.inning
         self.player_volume = 0.05
-        self.whistle_sound = pyglet.resource.media('whistle.wav', streaming=False)
-        self.ball_hit_sound = pyglet.resource.media('ball_hit.wav', streaming=False)
+        self.whistle_sound = 1 # pyglet.resource.media('whistle.wav', streaming=False)
+        self.ball_hit_sound = 2 # pyglet.resource.media('ball_hit.wav', streaming=False)
 
     def play(self, sound):
         music_player = pyglet.media.Player()
@@ -35,7 +35,7 @@ class GameCtrl(Layer):
         music_player.play()
 
     def scored(self, player):
-        self.play(self.whistle_sound)
+        #self.play(self.whistle_sound)
         if player == self.inning:
             self.score[player] += 1
             if self.score[player] >= constants.SCORE_LIMIT:
@@ -62,7 +62,7 @@ class GameCtrl(Layer):
 
     def on_player_hits_ball(self, emitter):
         if self.game.game_active:
-            self.play(self.ball_hit_sound)
+            #self.play(self.ball_hit_sound)
             if self.get_current_player() == self.current_player:
                 self.hit_count += 1
             else:
