@@ -52,12 +52,12 @@ class Player(object):
         head_shape = pymunk.Circle(self.body, self.head_radius, (0, 45))
         head_shape.layers = 0b001  # use layers to prevent body and head collision
         head_shape.collision_type = 1
-        head_shape.elasticity = 2  # >1 to increase ball speed on impact
+        head_shape.elasticity = 0.8  # >1 to increase ball speed on impact
         head_shape.friction = 0.8
         self.head_shape = head_shape
         body_shape = pymunk.Circle(self.body, self.body_radius, (0, -30))
         body_shape.layers = 0b100
-        body_shape.elasticity = 2  # >1 to increase ball speed on impact
+        body_shape.elasticity = 0.8  # >1 to increase ball speed on impact
         body_shape.collision_type = 1
         body_shape.friction = 0.9
         self.body_shape = body_shape
@@ -109,13 +109,13 @@ class Player(object):
         if self.body.position[1] <= 90 + constants.GROUND_OFFSET:
             self.body.velocity.y = speed
     
-    def tip(self):
-        self.head_shape.elasticity = 0.3  # >1 to increase ball speed on impact
-        self.body_shape.elasticity = 0.3  # >1 to increase ball speed on impact
+    def change_elasticity(self, new_elasticity):
+        self.head_shape.elasticity = new_elasticity  # >1 to increase ball speed on impact
+        self.body_shape.elasticity = new_elasticity  # >1 to increase ball speed on impact
     
-    def stop_tip(self):
-        self.head_shape.elasticity = 2  # >1 to increase ball speed on impact
-        self.body_shape.elasticity = 2  # >1 to increase ball speed on impact
+    def reset_elasticity(self):
+        self.head_shape.elasticity = 0.8  # >1 to increase ball speed on impact
+        self.body_shape.elasticity = 0.8  # >1 to increase ball speed on impact
 
     def stop(self):
         self.body.velocity.x = 0

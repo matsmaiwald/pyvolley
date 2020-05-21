@@ -92,11 +92,13 @@ class Game(Layer):
             self.config_player[0]['right'] = key.D
             self.config_player[0]['jump'] = key.W
             self.config_player[0]['tip'] = key.LSHIFT
+            self.config_player[0]['spike'] = key.LCTRL
             self.config_player[1]['name'] = 'Player2'
             self.config_player[1]['left'] = key.LEFT
             self.config_player[1]['right'] = key.RIGHT
             self.config_player[1]['jump'] = key.UP
             self.config_player[1]['tip'] = key.RSHIFT
+            self.config_player[1]['spike'] = key.RCTRL
 
     def reset_ball(self, player=None):
         try:
@@ -241,7 +243,9 @@ class Game(Layer):
             elif k == self.config_player[1]['jump']:
                 self.players[1].start_jumping()
             elif k == self.config_player[1]['tip']:
-                self.players[1].tip()
+                self.players[1].change_elasticity(new_elasticity=0.3)
+            elif k == self.config_player[1]['spike']:
+                self.players[1].change_elasticity(new_elasticity=6)
 
             elif k == self.config_player[0]['left']:
                 self.players[0].move_left()
@@ -250,7 +254,9 @@ class Game(Layer):
             elif k == self.config_player[0]['jump']:
                 self.players[0].start_jumping()
             elif k == self.config_player[0]['tip']:
-                self.players[0].tip()
+                self.players[0].change_elasticity(new_elasticity=0.3)
+            elif k == self.config_player[0]['spike']:
+                self.players[0].change_elasticity(new_elasticity=6)
         return False
 
     def on_key_release(self, k, m):
@@ -260,14 +266,19 @@ class Game(Layer):
         elif k == self.config_player[1]['jump']:
             self.players[1].stop_jumping()
         elif k == self.config_player[1]['tip']:
-            self.players[1].stop_tip()
+            self.players[1].reset_elasticity()
+        elif k == self.config_player[1]['spike']:
+            self.players[1].reset_elasticity()
+
         if (k == self.config_player[0]['left'] and self.players[0].body.velocity.x < 0) or\
                     (k == self.config_player[0]['right'] and self.players[0].body.velocity.x > 0):
             self.players[0].stop()
         elif k == self.config_player[0]['jump']:
             self.players[0].stop_jumping()
         elif k == self.config_player[0]['tip']:
-            self.players[0].stop_tip()
+            self.players[0].reset_elasticity()
+        elif k == self.config_player[0]['spike']:
+            self.players[0].reset_elasticity()
         return False
 
 
