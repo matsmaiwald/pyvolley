@@ -67,6 +67,7 @@ class Player(object):
         self.shadow_sprite.position = (pos[0] + (pos[1] - constants.GROUND_OFFSET) / 1.5, constants.GROUND_OFFSET)
         self._is_jumping = False
 
+
     def update(self, dt):
         self.sprite.position = pos = self.body.position
         self.shadow_sprite.position = (pos[0] + (pos[1] - constants.GROUND_OFFSET) / 1.5, constants.GROUND_OFFSET)

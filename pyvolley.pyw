@@ -60,14 +60,18 @@ class MainMenu(Menu):
         self.font_item_selected['font_size'] = 56
         self.font_item_selected['color'] = (0, 0, 0, 255)
 
-        items = [MenuItem('Start', self.on_start_game),
+        items = [MenuItem('Start 1 Player', self.on_start_1player_game),
+                 MenuItem('Start 2 Players', self.on_start_2player_game),
                  MenuItem('Options', self.on_options),
                  # MenuItem('Scores', self.on_scores),
                  MenuItem('Quit', self.on_quit)]
         self.create_menu(items, shake(), shake_back())
 
-    def on_start_game(self):
-        director.push(game.get_new_game())
+    def on_start_1player_game(self):
+        director.push(game.get_new_1player_game())
+    
+    def on_start_2player_game(self):
+        director.push(game.get_new_2player_game())
 
     def on_options(self):
         self.parent.switch_to(1)

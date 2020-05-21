@@ -25,7 +25,7 @@ __author__ = 'aikikode'
 class Game(Layer):
     is_event_handler = True  # enable pyglet's events
 
-    def __init__(self):
+    def __init__(self, is_2players):
         super(Game, self).__init__()
         self.width, self.height = director.get_window_size()
         self.space = pymunk.Space()
@@ -71,6 +71,7 @@ class Game(Layer):
         self.config_player = [{}, {}]
         self.read_settings()
         self.stop_player_sliding()
+        self.is_2players = is_2players
 
     def read_settings(self):
         config = ConfigParser.RawConfigParser()
@@ -225,7 +226,8 @@ class Game(Layer):
         self.ball.update(dt)
         self.players[0].update(dt)
         self.players[1].update(dt)
-        self.players[0].auto_play(ball_position=self.ball.body.position)
+        if not self.is_2players:
+            self.players[0].auto_play(ball_position=self.ball.body.position)
         if self.schedule_pause_ball:
             self.schedule_pause_ball = False
             self.pause_ball()
@@ -285,9 +287,21 @@ class EndGame(Layer):
         self.add(self.label)
 
 
-def get_new_game():
+def get_new_1player_game():
     scene = Scene()
-    game = Game()
+    game = Game(is_2players=False)
+    hud = Hud()
+    end_game = EndGame()
+    game_ctrl = GameCtrl(game, hud, end_game)
+    scene.add(game, z=0, name="game layer")
+    scene.add(game_ctrl, z=1, name="game control layer")
+    scene.add(hud, z=2, name="hud layer")
+    scene.add(end_game, z=3, name="end game layer")
+    return scene
+
+def get_new_2player_game():
+    scene = Scene()
+    game = Game(is_2players=True)
     hud = Hud()
     end_game = EndGame()
     game_ctrl = GameCtrl(game, hud, end_game)
