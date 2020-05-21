@@ -90,10 +90,12 @@ class Game(Layer):
             self.config_player[0]['left'] = key.A
             self.config_player[0]['right'] = key.D
             self.config_player[0]['jump'] = key.W
+            self.config_player[0]['tip'] = key.LSHIFT
             self.config_player[1]['name'] = 'Player2'
             self.config_player[1]['left'] = key.LEFT
             self.config_player[1]['right'] = key.RIGHT
             self.config_player[1]['jump'] = key.UP
+            self.config_player[1]['tip'] = key.RSHIFT
 
     def reset_ball(self, player=None):
         try:
@@ -136,10 +138,10 @@ class Game(Layer):
     def on_player_hits_virtual_wall(self, space, arbiter):
         if arbiter.shapes[0] in [self.players[0].body_shape, self.players[0].head_shape]:
             self.players[0].body.velocity.x = 0
-            self.players[0].body.position.x = 0
+            self.players[0].body.position.x = 10
         elif arbiter.shapes[0] in [self.players[1].body_shape, self.players[1].head_shape]:
             self.players[1].body.velocity.x = 0
-            self.players[1].body.position.x = self.width
+            self.players[1].body.position.x = self.width - 10
         return True
 
     def on_player_hits_ground(self, space, arbiter):
@@ -223,6 +225,7 @@ class Game(Layer):
         self.ball.update(dt)
         self.players[0].update(dt)
         self.players[1].update(dt)
+        self.players[0].auto_play(ball_position=self.ball.body.position)
         if self.schedule_pause_ball:
             self.schedule_pause_ball = False
             self.pause_ball()
@@ -235,12 +238,17 @@ class Game(Layer):
                 self.players[1].move_right()
             elif k == self.config_player[1]['jump']:
                 self.players[1].start_jumping()
+            elif k == self.config_player[1]['tip']:
+                self.players[1].tip()
+
             elif k == self.config_player[0]['left']:
                 self.players[0].move_left()
             elif k == self.config_player[0]['right']:
                 self.players[0].move_right()
             elif k == self.config_player[0]['jump']:
                 self.players[0].start_jumping()
+            elif k == self.config_player[0]['tip']:
+                self.players[0].tip()
         return False
 
     def on_key_release(self, k, m):
@@ -249,11 +257,15 @@ class Game(Layer):
             self.players[1].stop()
         elif k == self.config_player[1]['jump']:
             self.players[1].stop_jumping()
+        elif k == self.config_player[1]['tip']:
+            self.players[1].stop_tip()
         if (k == self.config_player[0]['left'] and self.players[0].body.velocity.x < 0) or\
                     (k == self.config_player[0]['right'] and self.players[0].body.velocity.x > 0):
             self.players[0].stop()
         elif k == self.config_player[0]['jump']:
             self.players[0].stop_jumping()
+        elif k == self.config_player[0]['tip']:
+            self.players[0].stop_tip()
         return False
 
 

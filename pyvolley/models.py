@@ -73,13 +73,30 @@ class Player(object):
         if self._is_jumping:
             self.jump()
 
-    def move_left(self, speed=constants.PLAYER_SPEED):
-        self.body.velocity.x = -speed
-        self.body_shape.friction = 0
+    def auto_play(self, ball_position):
+        def get_in_position(offset):
+            if self.body.position[0] - ball_position[0] >= 5:
+                self.move_left(friction=5)
+            elif ball_position[0] - self.body.position[0] >= offset:
+                self.move_right(friction=5)
+        def decide_jump(ball_x, ball_y):
+            if ball_y > 500 and ball_y <600 and ball_x < 700:
+                self.start_jumping()
+            elif ball_x == 320 and ball_y == 400: # serve
+                self.start_jumping()
+            else:
+                self.stop_jumping()
+        decide_jump(ball_position[0], ball_position[1])
+        get_in_position(40)
+        print(ball_position)
 
-    def move_right(self, speed=constants.PLAYER_SPEED):
+    def move_left(self, speed=constants.PLAYER_SPEED, friction=0):
+        self.body.velocity.x = -speed
+        self.body_shape.friction = friction
+
+    def move_right(self, speed=constants.PLAYER_SPEED, friction=0):
         self.body.velocity.x = speed
-        self.body_shape.friction = 0
+        self.body_shape.friction = friction
 
     def start_jumping(self):
         self._is_jumping = True
@@ -90,6 +107,14 @@ class Player(object):
     def jump(self, speed=constants.PLAYER_JUMP_SPEED):
         if self.body.position[1] <= 90 + constants.GROUND_OFFSET:
             self.body.velocity.y = speed
+    
+    def tip(self):
+        self.head_shape.elasticity = 0.3  # >1 to increase ball speed on impact
+        self.body_shape.elasticity = 0.3  # >1 to increase ball speed on impact
+    
+    def stop_tip(self):
+        self.head_shape.elasticity = 2  # >1 to increase ball speed on impact
+        self.body_shape.elasticity = 2  # >1 to increase ball speed on impact
 
     def stop(self):
         self.body.velocity.x = 0
